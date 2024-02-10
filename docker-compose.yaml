@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  irssi-dispatcher:
+    image: irssi-dispatcher
+    build:
+      context: .
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+    networks:
+      - dispatchnet
+    restart: unless-stopped
+    volumes:
+      - ./config.toml:/opt/irssi-dispatcher/config.toml
+    cap_drop:
+      - ALL
+    dns:
+      - 9.9.9.9
+    environment:
+      - SERVER_DEPLOYMENT_TYPE=deployment
+    entrypoint: ["/irssi-dispatcher/irssi-dispatcher"]
+networks:
+  dispatchnet:
